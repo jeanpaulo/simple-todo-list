@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -29,7 +30,8 @@ namespace simple_todo_list
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<ContextoGeral>(options => 
-                options.UseNpgsql(Configuration.GetConnectionString("DockerLocal")).UseLowerCaseNamingConvention()
+                options.UseNpgsql(Configuration.GetConnectionString("HerokuPostgres"))
+                       .UseLowerCaseNamingConvention()
             );
             services.AddControllers();
 
@@ -40,6 +42,21 @@ namespace simple_todo_list
                        .AllowAnyMethod()
                        .AllowAnyHeader();
             }));
+
+            // Https
+            // services.AddHttpsRedirection(options =>
+            // {
+            //     options.RedirectStatusCode = StatusCodes.Status307TemporaryRedirect;
+            //     options.HttpsPort = 5001;
+            // });
+
+            // Hsts
+            // services.AddHsts(options =>
+            // {
+            //     options.Preload = false;
+            //     options.IncludeSubDomains = false;
+            //     options.MaxAge = TimeSpan.FromDays(30);
+            // });
 
             services.AddSwaggerGen(c =>
             {
@@ -57,9 +74,10 @@ namespace simple_todo_list
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "simple_todo_list v1"));
             }
 
-            app.UseCors("Cors");
-
+            // app.UseHsts();
             app.UseHttpsRedirection();
+
+            app.UseCors("Cors");
 
             app.UseRouting();
 
