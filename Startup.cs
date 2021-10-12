@@ -29,9 +29,18 @@ namespace simple_todo_list
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<ContextoGeral>(options => 
-                options.UseNpgsql(Configuration.GetConnectionString("HerokuPostgres"))
+                options.UseNpgsql(Configuration.GetConnectionString("DockerLocal")).UseLowerCaseNamingConvention()
             );
             services.AddControllers();
+
+            // Add Cors
+            services.AddCors(o => o.AddPolicy("Cors", builder =>
+            {
+                builder.AllowAnyOrigin()
+                       .AllowAnyMethod()
+                       .AllowAnyHeader();
+            }));
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "simple_todo_list", Version = "v1" });
@@ -47,6 +56,8 @@ namespace simple_todo_list
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "simple_todo_list v1"));
             }
+
+            app.UseCors("Cors");
 
             app.UseHttpsRedirection();
 
