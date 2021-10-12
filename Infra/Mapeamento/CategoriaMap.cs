@@ -11,7 +11,7 @@ namespace simple_todo_list.Infra.Mapeamento
             builder.HasKey(c => c.CategoriaId);
             builder.Property(c => c.Descricao).HasMaxLength(40).IsRequired();
             builder.Property(c => c.Ativo).HasDefaultValue(true);
-            builder.ToTable("dbtodolist_Categorias");
+            builder.ToTable("dbtodolist_categorias");
         }
     }
 }
