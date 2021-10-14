@@ -6,9 +6,7 @@ namespace simple_todo_list.Infra
 {
     public class ContextoGeral : DbContext
     {
-        public ContextoGeral(DbContextOptions<ContextoGeral> options) : base(options)
-        {
-        }
+        public ContextoGeral(DbContextOptions<ContextoGeral> options) : base(options) { }
 
         public DbSet<Categoria> Categorias { get; set; }
 
